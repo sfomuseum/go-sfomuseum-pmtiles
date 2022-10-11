@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-server"
 	"github.com/protomaps/go-pmtiles/pmtiles"
 	"github.com/sfomuseum/go-flags/flagset"
@@ -47,10 +48,24 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 
 	mux.Handle("/", tile_handler)
 
-	if example {
+	if enable_example {
+
+		if example_database == "" {
+			return fmt.Errorf("You must specify a value for -example-database.")
+		}
+
+		append_opts := &rewrite.AppendResourcesOptions{
+			DataAttributes: map[string]string{
+				"example-database": example_database,
+			},
+		}
+		
 		http_fs := gohttp.FS(www.FS)
 		example_handler := gohttp.FileServer(http_fs)
+
+		example_handler = rewrite.AppendResourcesHandler(example_handler, append_opts)
 		example_handler = gohttp.StripPrefix("/example", example_handler)
+		
 		mux.Handle("/example/", example_handler)
 	}
 

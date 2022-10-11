@@ -6,6 +6,9 @@ github.com/RoaringBitmap/roaring/roaring64
 # github.com/aaronland/go-aws-session v0.0.6
 ## explicit; go 1.12
 github.com/aaronland/go-aws-session
+# github.com/aaronland/go-http-rewrite v1.0.0
+## explicit; go 1.16
+github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-server v1.0.0
 ## explicit; go 1.16
 github.com/aaronland/go-http-server
@@ -283,6 +286,8 @@ gocloud.dev/internal/openurl
 gocloud.dev/internal/retry
 # golang.org/x/net v0.0.0-20220802222814-0bcc04d9c69b
 ## explicit; go 1.17
+golang.org/x/net/html
+golang.org/x/net/html/atom
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack

@@ -225,6 +225,8 @@ github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMx
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/aaronland/go-aws-session v0.0.6 h1:Dp1Hvg7s1qM1xJ2byktEdB16i9t6wx6tMcZRpMoSwpo=
 github.com/aaronland/go-aws-session v0.0.6/go.mod h1:jflsOdd7QkD0ugdTEfU2UYpFjytP8AxiBxP++s10x88=
+github.com/aaronland/go-http-rewrite v1.0.0 h1:UeoNf1QXFLJFWvxwrczkPT+71WtB6PP4o7P3r12LMnw=
+github.com/aaronland/go-http-rewrite v1.0.0/go.mod h1:CqMfeIY9Vp/6RuajglOCIQ1gRo7RMtgp+jQKXPrbUIg=
 github.com/aaronland/go-http-server v1.0.0 h1:AF+4JLEyXNj7Mulpcx8yaek1RWGojWOQMg5vinEDDVs=
 github.com/aaronland/go-http-server v1.0.0/go.mod h1:gJ2TDOB9EhK8IULIf3UqVYcv1TaEa5N2er9YaBvD2M0=
 github.com/aaronland/go-roster v1.0.0 h1:FRDGrTqsYySKjWnAhbBGXyeGlI/o5/t9FZYCbUmyQtI=

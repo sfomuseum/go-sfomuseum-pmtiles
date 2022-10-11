@@ -3,6 +3,7 @@ module github.com/sfomuseum/go-sfomuseum-pmtiles
 go 1.19
 
 require (
+	github.com/aaronland/go-http-rewrite v1.0.0
 	github.com/aaronland/go-http-server v1.0.0
 	github.com/aaronland/gocloud-blob-s3 v0.2.1
 	github.com/protomaps/go-pmtiles v1.2.1
