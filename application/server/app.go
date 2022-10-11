@@ -15,11 +15,13 @@ import (
 	gohttp "net/http"
 )
 
+// RunWithFlagSet runs the server application using a default flagset.
 func Run(ctx context.Context, logger *log.Logger) error {
 	fs := DefaultFlagSet()
 	return RunWithFlagSet(ctx, fs, logger)
 }
 
+// RunWithFlagSet runs the server application using flags derived from 'fs'.
 func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
 	flagset.Parse(fs)

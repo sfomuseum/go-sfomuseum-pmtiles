@@ -42,6 +42,7 @@ var example_longitude string
 // The starting zoom for the example map application.
 var example_zoom string
 
+// DefaultFlagSet returns a `flag.FlagSet` instance configured with the default flags necessary for the server application.
 func DefaultFlagSet() *flag.FlagSet {
 
 	fs := flagset.NewFlagSet("pmtiles")
