@@ -7,10 +7,10 @@ import (
 	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-server"
 	"github.com/protomaps/go-pmtiles/pmtiles"
-	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
-	"github.com/sfomuseum/go-sfomuseum-pmtiles/example/www"
 	"github.com/rs/cors"
+	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/example/www"
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
 	"log"
 	gohttp "net/http"
 )
@@ -23,7 +23,7 @@ func Run(ctx context.Context, logger *log.Logger) error {
 func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
 	flagset.Parse(fs)
-	
+
 	loop := pmtiles.NewLoop(tile_path, logger, cache_size, "")
 	loop.Start()
 
@@ -32,15 +32,15 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 	tile_handler := http.TileHandler(loop, logger)
 
 	if enable_cors {
-		
+
 		if len(cors_origins) == 0 {
 			cors_origins.Set("*")
 		}
 
 		c := cors.New(cors.Options{
-			AllowedOrigins: cors_origins,
+			AllowedOrigins:   cors_origins,
 			AllowCredentials: cors_allow_credentials,
-			Debug: cors_debug,
+			Debug:            cors_debug,
 		})
 
 		tile_handler = c.Handler(tile_handler)
@@ -56,22 +56,25 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 
 		append_opts := &rewrite.AppendResourcesOptions{
 			DataAttributes: map[string]string{
-				"example-database": example_database,
+				"example-database":  example_database,
+				"example-latitude":  example_latitude,
+				"example-longitude": example_longitude,
+				"example-zoom":      example_zoom,
 			},
 		}
-		
+
 		http_fs := gohttp.FS(www.FS)
 		example_handler := gohttp.FileServer(http_fs)
 
 		example_handler = rewrite.AppendResourcesHandler(example_handler, append_opts)
 		example_handler = gohttp.StripPrefix("/example", example_handler)
-		
+
 		mux.Handle("/example/", example_handler)
 	}
 
 	null_handler := http.NullHandler()
 	mux.Handle("/favicon.ico", null_handler)
-	
+
 	s, err := server.NewServer(ctx, server_uri)
 
 	if err != nil {

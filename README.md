@@ -28,9 +28,15 @@ $> ./bin/server -h
   -enable-cors
     	Enable CORS support.
   -enable-example
-    	Enable an example 
+    	Enable an example map application at /example for testing database files. 
   -example-database string
-    	...
+    	The name of the database to use in the example map application. Note that this value should be the name of the database without its extension.
+  -example-latitude string
+    	The starting latitude for the example map application. (default "37.6143")
+  -example-longitude string
+    	The starting longitude for the example map application. (default "-122.3828")
+  -example-zoom string
+    	The starting zoom for the example map application. (default "13")
   -server-uri string
     	A valid aaronland/go-http-server URI. (default "http://localhost:8080")
   -tile-path string

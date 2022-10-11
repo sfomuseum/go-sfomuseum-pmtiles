@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	_ "github.com/aaronland/gocloud-blob-s3"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/application/server"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/s3blob"
-	_ "github.com/aaronland/gocloud-blob-s3"
 	"log"
 )
 
