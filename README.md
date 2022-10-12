@@ -119,3 +119,4 @@ Be sure to add an entry for "application/x-protobuf" in `API: {API_NAME} > Setti
 * https://github.com/protomaps/go-pmtiles
 * https://github.com/aaronland/go-http-server
 * https://gocloud.dev/blob
+* https://github.com/aaronland/gocloud-blob-s3
