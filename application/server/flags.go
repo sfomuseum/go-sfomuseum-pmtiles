@@ -2,8 +2,10 @@ package server
 
 import (
 	"flag"
+	"fmt"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-flags/multi"
+	"os"
 )
 
 // A valid aaronland/go-http-server URI.
@@ -63,6 +65,13 @@ func DefaultFlagSet() *flag.FlagSet {
 	fs.StringVar(&example_latitude, "example-latitude", "37.6143", "The starting latitude for the example map application.")
 	fs.StringVar(&example_longitude, "example-longitude", "-122.3828", "The starting longitude for the example map application.")
 	fs.StringVar(&example_zoom, "example-zoom", "13", "The starting zoom for the example map application.")
+
+	fs.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Launch a web server for search Protomaps (v3) tile requests.\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s [options]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Valid options are:\n")
+		fs.PrintDefaults()
+	}
 
 	return fs
 }

@@ -4,7 +4,7 @@ Opinionated SFO Museum package for working with Protomaps (v3) databases.
 
 ## Documentation
 
-Documentation is incomplete at this time.
+[![Go Reference](https://pkg.go.dev/badge/github.com/sfomuseum/go-sfomuseum-pmtiles.svg)](https://pkg.go.dev/github.com/sfomuseum/go-sfomuseum-pmtiles)
 
 ## Tools
 
@@ -82,6 +82,16 @@ _Note the syntax in which the bucket name is seperate from any leading prefix. I
 #### AWS
 
 ##### Lambda (with API Gateway proxy integration)
+
+```
+$> make lambda
+if test -f main; then rm -f main; fi
+if test -f server.zip; then rm -f server.zip; fi
+GOOS=linux go build -mod vendor -o main cmd/server/main.go
+zip server.zip main
+  adding: main (deflated 55%)
+rm -f main
+```
 
 The following environment variables should be configured for use as a Lambda function:
 
