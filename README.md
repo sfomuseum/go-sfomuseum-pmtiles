@@ -107,7 +107,7 @@ The rules for assigning flags from envinronment variables are:
 * Uppercase the flag name.
 * Prepend the new string with "SFOMUSEUM_".
 
-For example the `-server-uri` becomes the `SFOMUSEUM_SERVER_URI`.
+For example the `-server-uri` flag becomes the `SFOMUSEUM_SERVER_URI` environment variable.
 
 You will need to configure your Lambda functions with an IAM role that allows the function to read data from the S3 bucket named `{BUCKET}`.
 
