@@ -79,6 +79,25 @@ _Note the syntax in which the bucket name is seperate from any leading prefix. I
 
 ![](docs/images/example-world.png)
 
+## AWS
+
+### Lambda
+
+| Name | Value | Notes |
+| --- | --- | --- |
+| SFOMUSEUM_SERVER_URI | lambda:// | |
+| SFOMUSEUM_TILE_PATH | s3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials=iam: | |
+
+You will need to configure your Lambda functions with an IAM role that allows the function to read data from the S3 bucket named {BUCKET}.
+
+### Lambda URL Functions
+
+Not yet. [It's on the list.](https://aws.amazon.com/blogs/networking-and-content-delivery/using-amazon-cloudfront-with-aws-lambda-as-origin-to-accelerate-your-web-applications/)
+
+### API Gateway
+
+TBW.
+
 ## See also
 
 * https://github.com/protomaps/go-pmtiles
