@@ -82,3 +82,5 @@ _Note the syntax in which the bucket name is seperate from any leading prefix. I
 ## See also
 
 * https://github.com/protomaps/go-pmtiles
+* https://github.com/aaronland/go-http-server
+* https://gocloud.dev/blob
