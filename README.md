@@ -81,14 +81,14 @@ _Note the syntax in which the bucket name is seperate from any leading prefix. I
 
 #### AWS
 
-##### Lambda
+##### Lambda (with API Gateway proxy integration)
 
 The following environment variables should be configured for use as a Lambda function:
 
 | Name | Value | Notes |
 | --- | --- | --- |
-| SFOMUSEUM_SERVER_URI | lambda://?binary_type=application/x-protobuf | |
-| SFOMUSEUM_TILE_PATH | s3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials=iam: | |
+| SFOMUSEUM_SERVER_URI | lambda://?binary_type=application/x-protobuf | Note the `?binary_type` parameter. This is important. |
+| SFOMUSEUM_TILE_PATH | s3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials=iam: | Note the `s3blob://` scheme which is different that the default `s3://` scheme and supports specifying AWS credentials using the `?credentials` parameter. |
 | SFOMUSEUM_CORS_ENABLE | true | |
 
 The rules for assigning flags from envinronment variables are:
