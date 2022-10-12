@@ -12,6 +12,11 @@ require (
 	gocloud.dev v0.27.0
 )
 
+// Pending these:
+// https://github.com/protomaps/go-pmtiles/pull/18
+// https://github.com/protomaps/go-pmtiles/pull/19
+replace github.com/protomaps/go-pmtiles v1.2.1 => github.com/sfomuseum/go-pmtiles v0.0.0-20221012182338-4227a6d8b0f1
+
 require (
 	github.com/RoaringBitmap/roaring v1.2.1 // indirect
 	github.com/aaronland/go-aws-session v0.0.6 // indirect

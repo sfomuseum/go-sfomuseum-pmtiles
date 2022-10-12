@@ -26,6 +26,12 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 
 	flagset.Parse(fs)
 
+	err := flagset.SetFlagsFromEnvVars(fs, "SFOMUSEUM")
+
+	if err != nil {
+		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
+	}
+	
 	loop := pmtiles.NewLoop(tile_path, logger, cache_size, "")
 	loop.Start()
 
