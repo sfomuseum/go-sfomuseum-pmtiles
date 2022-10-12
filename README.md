@@ -65,7 +65,7 @@ $> ./bin/server \
 
 ![](docs/images/example-sfo.png)
 
-Or, with a PMTile database hosted on S3:
+Or, with a PMTiles database hosted on S3:
 
 ```
 $> bin/server \
