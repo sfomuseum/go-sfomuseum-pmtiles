@@ -9,7 +9,7 @@ import (
 	"github.com/protomaps/go-pmtiles/pmtiles"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-sfomuseum-pmtiles/example/www"
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
 	"log"
 	gohttp "net/http"
@@ -31,8 +31,13 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 	if err != nil {
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
-	
-	loop := pmtiles.NewLoop(tile_path, logger, cache_size, "")
+
+	loop, err := pmtiles.NewLoop(tile_path, logger, cache_size, "")
+
+	if err != nil {
+		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)
+	}
+
 	loop.Start()
 
 	mux := gohttp.NewServeMux()
@@ -71,7 +76,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 			},
 		}
 
-		http_fs := gohttp.FS(www.FS)
+		http_fs := gohttp.FS(example.FS)
 		example_handler := gohttp.FileServer(http_fs)
 
 		example_handler = rewrite.AppendResourcesHandler(example_handler, append_opts)
