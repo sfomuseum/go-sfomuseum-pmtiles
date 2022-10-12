@@ -1,6 +1,6 @@
 # go-sfomuseum-pmtiles
 
-SFO Museum specific package for working with Protomaps (v3) databases.
+Opinionated SFO Museum package for working with Protomaps (v3) databases.
 
 ## Documentation
 
