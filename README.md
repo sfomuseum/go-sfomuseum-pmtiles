@@ -83,11 +83,21 @@ _Note the syntax in which the bucket name is seperate from any leading prefix. I
 
 ##### Lambda
 
+The following environment variables should be configured for use as a Lambda function:
+
 | Name | Value | Notes |
 | --- | --- | --- |
 | SFOMUSEUM_SERVER_URI | lambda://?binary_type=application/x-protobuf | |
 | SFOMUSEUM_TILE_PATH | s3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials=iam: | |
 | SFOMUSEUM_CORS_ENABLE | true | |
+
+The rules for assigning flags from envinronment variables are:
+
+* Replace all instances of "-" in a flag name with "_".
+* Uppercase the flag name.
+* Prepend the new string with "SFOMUSEUM_".
+
+For example the `-server-uri` becomes the `SFOMUSEUM_SERVER_URI`.
 
 You will need to configure your Lambda functions with an IAM role that allows the function to read data from the S3 bucket named {BUCKET}.
 
