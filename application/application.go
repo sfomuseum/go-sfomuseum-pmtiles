@@ -1,0 +1,2 @@
+// Package application provides code to implement generic applications that may use interfaces for achieving desired functionality without defining specific implementations. For example an application may indicate that it uses a `gocloud.dev/blob` instance but not specify the use of the `gocloud.dev/blob/s3blob` package. That would be defined by a bespoke tool that invokes the application code defined here.
+package application

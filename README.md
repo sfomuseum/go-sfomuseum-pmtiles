@@ -65,6 +65,20 @@ $> ./bin/server \
 
 ![](docs/images/example-sfo.png)
 
+Or, with a PMTile database hosted on S3:
+
+```
+$> bin/server \
+	-tile-path 's3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials={CREDENTIALS}' \
+	-enable-example \
+	-example-database \
+	sfomuseum
+```
+
+_Note the syntax in which the bucket name is seperate from any leading prefix. I've wasted a lot of time not remembering this._
+
+![](docs/images/example-world.png)
+
 ## See also
 
 * https://github.com/protomaps/go-pmtiles

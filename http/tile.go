@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// TileHandler provides a `http.Handler` for serving Protomaps tile requests using 'loop'.
 func TileHandler(loop pmtiles.Loop, logger *log.Logger) gohttp.Handler {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
@@ -18,10 +19,11 @@ func TileHandler(loop pmtiles.Loop, logger *log.Logger) gohttp.Handler {
 		for k, v := range headers {
 			rsp.Header().Set(k, v)
 		}
+		
 		rsp.WriteHeader(status_code)
 		rsp.Write(body)
 
-		logger.Printf("[%d] served %s in %s", status_code, req.URL.Path, time.Since(start))
+		go logger.Printf("[%d] served %s in %s", status_code, req.URL.Path, time.Since(start))
 	}
 
 	return gohttp.HandlerFunc(fn)
