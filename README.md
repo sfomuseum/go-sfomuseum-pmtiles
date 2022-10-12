@@ -109,7 +109,7 @@ The rules for assigning flags from envinronment variables are:
 
 For example the `-server-uri` becomes the `SFOMUSEUM_SERVER_URI`.
 
-You will need to configure your Lambda functions with an IAM role that allows the function to read data from the S3 bucket named {BUCKET}.
+You will need to configure your Lambda functions with an IAM role that allows the function to read data from the S3 bucket named `{BUCKET}`.
 
 ##### Lambda URL Functions
 
@@ -120,9 +120,9 @@ Not yet. It's on the list.
 
 ##### API Gateway
 
-TBW.
-
-Be sure to add an entry for "application/x-protobuf" in `API: {API_NAME} > Settings > Binary Media Types`.
+* Create a new `{proxy+}` resource on "/".
+* Add a new `GET` method (on the "/" resource) and point it to your Lambda function.
+* Be sure to add an entry for "application/x-protobuf" in `API: {API_NAME} > Settings > Binary Media Types`.
 
 ## See also
 
