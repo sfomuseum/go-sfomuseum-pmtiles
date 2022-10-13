@@ -69,13 +69,11 @@ Or, with a PMTiles database hosted on S3:
 
 ```
 $> bin/server \
-	-tile-path 's3blob://{BUCKET}?prefix={PREFIX}&region={REGION}&credentials={CREDENTIALS}' \
+	-tile-path 's3blob://{BUCKET}?region={REGION}&credentials={CREDENTIALS}' \
 	-enable-example \
 	-example-database \
 	sfomuseum
 ```
-
-_Note the syntax in which the bucket name is seperate from any leading prefix. I've wasted a lot of time not remembering this._
 
 ![](docs/images/example-world.png)
 
