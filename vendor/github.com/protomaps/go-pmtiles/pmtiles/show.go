@@ -2,7 +2,9 @@ package pmtiles
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/dustin/go-humanize"
@@ -44,7 +46,16 @@ func Show(logger *log.Logger, args []string) error {
 	}
 	r.Close()
 
-	header := deserialize_header(b[0:HEADERV3_LEN_BYTES])
+	header, err := deserialize_header(b[0:HEADERV3_LEN_BYTES])
+	if err != nil {
+		// check to see if it's a V2 file
+		if string(b[0:2]) == "PM" {
+			spec_version := b[2]
+			return fmt.Errorf("PMTiles version %d detected; please use 'pmtiles convert' to upgrade to version 3.", spec_version)
+		}
+
+		return fmt.Errorf("Failed to read %s, %w", file, err)
+	}
 
 	if arg_z == "" {
 		var tile_type string
@@ -60,6 +71,7 @@ func Show(logger *log.Logger, args []string) error {
 		default:
 			tile_type = "Unknown"
 		}
+		fmt.Printf("pmtiles spec version: %d\n", header.SpecVersion)
 		fmt.Printf("total size: %s\n", humanize.Bytes(uint64(r.Size())))
 		fmt.Printf("tile type: %s\n", tile_type)
 		fmt.Printf("bounds: %f,%f %f,%f\n", float64(header.MinLonE7)/10000000, float64(header.MinLatE7)/10000000, float64(header.MaxLonE7)/10000000, float64(header.MaxLatE7)/10000000)
@@ -71,6 +83,38 @@ func Show(logger *log.Logger, args []string) error {
 		fmt.Printf("tile entries count: %d\n", header.TileEntriesCount)
 		fmt.Printf("tile contents count: %d\n", header.TileContentsCount)
 		fmt.Printf("clustered: %t\n", header.Clustered)
+
+		metadata_reader, err := bucket.NewRangeReader(ctx, file, int64(header.MetadataOffset), int64(header.MetadataLength), nil)
+		if err != nil {
+			return fmt.Errorf("Failed to create range reader for %s, %w", file, err)
+		}
+
+		var metadata_bytes []byte
+		if header.InternalCompression == Gzip {
+			r, _ := gzip.NewReader(metadata_reader)
+			metadata_bytes, err = io.ReadAll(r)
+			if err != nil {
+				return fmt.Errorf("Failed to read %s, %w", file, err)
+			}
+		} else {
+			metadata_bytes, err = io.ReadAll(metadata_reader)
+			if err != nil {
+				return fmt.Errorf("Failed to read %s, %w", file, err)
+			}
+		}
+		metadata_reader.Close()
+
+		var metadata_map map[string]interface{}
+		json.Unmarshal(metadata_bytes, &metadata_map)
+		for k, v := range metadata_map {
+			switch v := v.(type) {
+			case string:
+				fmt.Println(k, v)
+			default:
+				fmt.Println(k, "<object...>")
+			}
+		}
+
 	} else {
 		// write the tile to stdout
 
