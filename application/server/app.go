@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-server"
-	"github.com/protomaps/go-pmtiles/pmtiles"
+	"github.com/protomaps/go-pmtiles/v2/pmtiles"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
@@ -32,7 +32,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	loop, err := pmtiles.NewLoop(tile_path, logger, cache_size, "")
+	loop, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "")
 
 	if err != nil {
 		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)
