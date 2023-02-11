@@ -32,7 +32,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	loop, err := pmtiles.NewLoop(tile_path, logger, cache_size, "")
+	loop, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "")
 
 	if err != nil {
 		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)
