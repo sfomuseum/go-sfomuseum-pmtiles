@@ -8,7 +8,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"time"
@@ -16,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/ec2/imds"
 	"github.com/aws/aws-sdk-go-v2/internal/ini"
+	"github.com/aws/aws-sdk-go-v2/internal/shareddefaults"
 	"github.com/aws/smithy-go/logging"
 )
 
@@ -95,6 +95,8 @@ const (
 	retryModeKey        = "retry_mode"
 
 	caBundleKey = "ca_bundle"
+
+	sdkAppID = "sdk_ua_app_id"
 )
 
 // defaultSharedConfigProfile allows for swapping the default profile for testing
@@ -108,7 +110,7 @@ var defaultSharedConfigProfile = DefaultSharedConfigProfile
 //   - Linux/Unix: $HOME/.aws/credentials
 //   - Windows: %USERPROFILE%\.aws\credentials
 func DefaultSharedCredentialsFilename() string {
-	return filepath.Join(userHomeDir(), ".aws", "credentials")
+	return filepath.Join(shareddefaults.UserHomeDir(), ".aws", "credentials")
 }
 
 // DefaultSharedConfigFilename returns the SDK's default file path for
@@ -119,7 +121,7 @@ func DefaultSharedCredentialsFilename() string {
 //   - Linux/Unix: $HOME/.aws/config
 //   - Windows: %USERPROFILE%\.aws\config
 func DefaultSharedConfigFilename() string {
-	return filepath.Join(userHomeDir(), ".aws", "config")
+	return filepath.Join(shareddefaults.UserHomeDir(), ".aws", "config")
 }
 
 // DefaultSharedConfigFiles is a slice of the default shared config files that
@@ -267,6 +269,9 @@ type SharedConfig struct {
 	//
 	//  ca_bundle=$HOME/my_custom_ca_bundle
 	CustomCABundle string
+
+	// aws sdk app ID that can be added to user agent header string
+	AppID string
 }
 
 func (c SharedConfig) getDefaultsMode(ctx context.Context) (value aws.DefaultsMode, ok bool, err error) {
@@ -387,6 +392,11 @@ func (c SharedConfig) getCustomCABundle(context.Context) (io.Reader, bool, error
 		return nil, false, err
 	}
 	return bytes.NewReader(b), true, nil
+}
+
+// getAppID returns the sdk app ID if set in shared config profile
+func (c SharedConfig) getAppID(context.Context) (string, bool, error) {
+	return c.AppID, len(c.AppID) > 0, nil
 }
 
 // loadSharedConfigIgnoreNotExist is an alias for loadSharedConfig with the
@@ -985,6 +995,9 @@ func (c *SharedConfig) setFromIniSection(profile string, section ini.Section) er
 
 	updateString(&c.CustomCABundle, section, caBundleKey)
 
+	// user agent app ID added to request User-Agent header
+	updateString(&c.AppID, section, sdkAppID)
+
 	// Shared Credentials
 	creds := aws.Credentials{
 		AccessKeyID:     section.String(accessKeyIDKey),
@@ -1266,22 +1279,6 @@ func (e CredentialRequiresARNError) Error() string {
 		"credential type %s requires role_arn, profile %s",
 		e.Type, e.Profile,
 	)
-}
-
-func userHomeDir() string {
-	// Ignore errors since we only care about Windows and *nix.
-	home, _ := os.UserHomeDir()
-
-	if len(home) > 0 {
-		return home
-	}
-
-	currUser, _ := user.Current()
-	if currUser != nil {
-		home = currUser.HomeDir
-	}
-
-	return home
 }
 
 func oneOrNone(bs ...bool) bool {

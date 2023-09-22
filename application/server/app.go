@@ -4,15 +4,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	gohttp "net/http"
+
 	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-server"
 	"github.com/protomaps/go-pmtiles/pmtiles"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
-	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
-	"log"
-	gohttp "net/http"
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"	
 )
 
 // RunWithFlagSet runs the server application using a default flagset.
@@ -32,7 +33,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	loop, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "")
+	loop, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
 
 	if err != nil {
 		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)

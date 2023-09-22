@@ -1,3 +1,12 @@
+# Release (2023-07-31)
+
+## General Highlights
+* **Feature**: Adds support for smithy-modeled endpoint resolution.
+
+# Release (2022-12-02)
+
+* No change notes available for this release.
+
 # Release (2022-10-24)
 
 ## Module Highlights

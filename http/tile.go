@@ -1,10 +1,11 @@
 package http
 
 import (
-	"github.com/protomaps/go-pmtiles/pmtiles"
 	"log"
 	gohttp "net/http"
 	"time"
+
+	"github.com/protomaps/go-pmtiles/pmtiles"	
 )
 
 // TileHandler provides a `http.Handler` for serving Protomaps tile requests using 'loop'.

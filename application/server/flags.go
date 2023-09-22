@@ -3,9 +3,10 @@ package server
 import (
 	"flag"
 	"fmt"
-	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-flags/multi"
 	"os"
+
+	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-flags/multi"	
 )
 
 // A valid aaronland/go-http-server URI.
