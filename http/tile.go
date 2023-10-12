@@ -5,7 +5,7 @@ import (
 	gohttp "net/http"
 	"time"
 
-	"github.com/protomaps/go-pmtiles/pmtiles"	
+	"github.com/protomaps/go-pmtiles/pmtiles"
 )
 
 // TileHandler provides a `http.Handler` for serving Protomaps tile requests using 'loop'.

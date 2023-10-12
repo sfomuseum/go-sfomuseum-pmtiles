@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-flags/multi"	
+	"github.com/sfomuseum/go-flags/multi"
 )
 
 // A valid aaronland/go-http-server URI.

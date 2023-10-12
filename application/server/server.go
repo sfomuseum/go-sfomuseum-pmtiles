@@ -14,8 +14,18 @@ import (
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
-	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"	
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
 )
+
+type RunOptions struct {
+	Server               *pmtiles.Server
+	Logger               *log.Logger
+	EnableCORS           bool
+	CORSOrigins          []string
+	CORSAllowCredentials bool
+	CORSDebug            bool
+	HTTPServerURI        string
+}
 
 // RunWithFlagSet runs the server application using a default flagset.
 func Run(ctx context.Context, logger *log.Logger) error {
@@ -34,28 +44,43 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	loop, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
+	server, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
 
 	if err != nil {
 		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)
 	}
 
-	loop.Start()
+	opts := &RunOptions{
+		HTTPServerURI:        server_uri,
+		Server:               server,
+		Logger:               logger,
+		EnableCORS:           enable_cors,
+		CORSOrigins:          cors_origins,
+		CORSAllowCredentials: cors_allow_credentials,
+		CORSDebug:            cors_debug,
+	}
+
+	return RunWithOptions(ctx, opts)
+}
+
+func RunWithOptions(ctx context.Context, opts *RunOptions) error {
+
+	opts.Server.Start()
 
 	mux := gohttp.NewServeMux()
 
-	tile_handler := http.TileHandler(loop, logger)
+	tile_handler := http.TileHandler(opts.Server, opts.Logger)
 
-	if enable_cors {
+	if opts.EnableCORS {
 
-		if len(cors_origins) == 0 {
-			cors_origins.Set("*")
+		if len(opts.CORSOrigins) == 0 {
+			opts.CORSOrigins = []string{"*"}
 		}
 
 		c := cors.New(cors.Options{
-			AllowedOrigins:   cors_origins,
-			AllowCredentials: cors_allow_credentials,
-			Debug:            cors_debug,
+			AllowedOrigins:   opts.CORSOrigins,
+			AllowCredentials: opts.CORSAllowCredentials,
+			Debug:            opts.CORSDebug,
 		})
 
 		tile_handler = c.Handler(tile_handler)
@@ -90,13 +115,13 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 	null_handler := http.NullHandler()
 	mux.Handle("/favicon.ico", null_handler)
 
-	s, err := server.NewServer(ctx, server_uri)
+	s, err := server.NewServer(ctx, opts.HTTPServerURI)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create new server, %w", err)
 	}
 
-	logger.Printf("Listening for requests on %s\n", s.Address())
+	opts.Logger.Printf("Listening for requests on %s\n", s.Address())
 
 	err = s.ListenAndServe(ctx, mux)
 
