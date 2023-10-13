@@ -5,6 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	gohttp "net/http"
 
@@ -25,6 +26,53 @@ type RunOptions struct {
 	CORSAllowCredentials bool
 	CORSDebug            bool
 	HTTPServerURI        string
+}
+
+func RunOptionsWithFlagSetAndFS(flag_fs *flag.FlagSet, logger *log.Logger, fs fs.FS) (*RunOptions, error) {
+
+	opts, err := RunOptionsWithFlagSet(flag_fs, logger)
+
+	if err != nil {
+		return nil, err
+	}
+
+	server, err := pmtiles.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
+
+	if err != nil {
+		return nil, err
+	}
+
+	opts.Server = server
+	return opts, nil
+}
+
+func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, error) {
+
+	flagset.Parse(fs)
+
+	err := flagset.SetFlagsFromEnvVars(fs, "SFOMUSEUM")
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to assign flags from environment variables, %w", err)
+	}
+
+	server, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create pmtiles.Server, %w", err)
+	}
+
+	opts := &RunOptions{
+		HTTPServerURI:        server_uri,
+		Server:               server,
+		Logger:               logger,
+		EnableCORS:           enable_cors,
+		CORSOrigins:          cors_origins,
+		CORSAllowCredentials: cors_allow_credentials,
+		CORSDebug:            cors_debug,
+	}
+
+	return opts, nil
 }
 
 // RunWithFlagSet runs the server application using a default flagset.
