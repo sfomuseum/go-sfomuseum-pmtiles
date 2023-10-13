@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
 
 	"github.com/protomaps/go-pmtiles/pmtiles"
 )
@@ -25,8 +24,6 @@ func NewBucketWithFS(bucket_fs fs.FS, bucketURL string, prefix string) (pmtiles.
 	if err != nil {
 		return nil, fmt.Errorf("Failed to open bucket, %v", err)
 	}
-
-	log.Println("B", gc_bucket)
 
 	var walk_func func(path string, d fs.DirEntry, err error) error
 
@@ -71,7 +68,6 @@ func NewBucketWithFS(bucket_fs fs.FS, bucketURL string, prefix string) (pmtiles.
 			return fmt.Errorf("Failed to close %s, %w", path, err)
 		}
 
-		log.Println(path)
 		return nil
 	}
 

@@ -29,7 +29,7 @@ func main() {
 		logger.Fatalf("Failed to derive run options from flagset, %w", err)
 	}
 
-	opts.FS = static.FS
+	opts.PMTilesFS = static.FS
 
 	err = app.RunWithOptions(ctx, opts)
 

@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	gohttp "net/http"
+	"strconv"
 
 	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-server"
@@ -20,16 +21,25 @@ import (
 )
 
 type RunOptions struct {
-	Logger               *log.Logger
-	FS                   fs.FS
+	ServerURI string
+	Logger    *log.Logger
+
 	EnableCORS           bool
 	CORSOrigins          []string
 	CORSAllowCredentials bool
 	CORSDebug            bool
-	HTTPServerURI        string
 
-	// To do: Add pmtiles.Server vars here
-	// To do: Add example_ vars here
+	EnableExample    bool
+	ExampleDatabase  string
+	ExampleLatitude  float64
+	ExampleLongitude float64
+	ExampleZoom      int
+
+	PMTilesURI       string
+	PMTilesFS        fs.FS
+	PMTilesPrefix    string
+	PMTilesCacheSize int
+	PMTilesHostname  string
 }
 
 func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, error) {
@@ -43,12 +53,24 @@ func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, e
 	}
 
 	opts := &RunOptions{
-		HTTPServerURI:        server_uri,
-		Logger:               logger,
+		ServerURI: server_uri,
+		Logger:    logger,
+
+		PMTilesURI:       tile_path,
+		PMTilesPrefix:    tile_prefix,
+		PMTilesCacheSize: cache_size,
+		PMTilesHostname:  public_hostname,
+
 		EnableCORS:           enable_cors,
 		CORSOrigins:          cors_origins,
 		CORSAllowCredentials: cors_allow_credentials,
 		CORSDebug:            cors_debug,
+
+		EnableExample:    enable_example,
+		ExampleDatabase:  example_database,
+		ExampleLatitude:  example_latitude,
+		ExampleLongitude: example_longitude,
+		ExampleZoom:      example_zoom,
 	}
 
 	return opts, nil
@@ -63,21 +85,10 @@ func Run(ctx context.Context, logger *log.Logger) error {
 // RunWithFlagSet runs the server application using flags derived from 'fs'.
 func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
-	flagset.Parse(fs)
-
-	err := flagset.SetFlagsFromEnvVars(fs, "SFOMUSEUM")
+	opts, err := RunOptionsWithFlagSet(fs, logger)
 
 	if err != nil {
-		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
-	}
-
-	opts := &RunOptions{
-		HTTPServerURI:        server_uri,
-		Logger:               logger,
-		EnableCORS:           enable_cors,
-		CORSOrigins:          cors_origins,
-		CORSAllowCredentials: cors_allow_credentials,
-		CORSDebug:            cors_debug,
+		return fmt.Errorf("Failed to derive run options, %w", err)
 	}
 
 	return RunWithOptions(ctx, opts)
@@ -88,9 +99,9 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	var pmtiles_server *pmtiles.Server
 	var err error
 
-	if opts.FS != nil {
+	if opts.PMTilesFS != nil {
 
-		fs_bucket, err := bucket.NewBucketWithFS(opts.FS, tile_path, "")
+		fs_bucket, err := bucket.NewBucketWithFS(opts.PMTilesFS, opts.PMTilesURI, opts.PMTilesPrefix)
 
 		if err != nil {
 			return fmt.Errorf("Failed to create new bucket from filesystem, %w", err)
@@ -98,7 +109,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 		defer fs_bucket.Close()
 
-		pmtiles_server, err = pmtiles.NewServerWithBucket(fs_bucket, "", opts.Logger, 64, "", "")
+		pmtiles_server, err = pmtiles.NewServerWithBucket(fs_bucket, opts.PMTilesPrefix, opts.Logger, opts.PMTilesCacheSize, "", opts.PMTilesHostname)
 
 		if err != nil {
 			return fmt.Errorf("Failed to create PMTiles server from bucket, %w", err)
@@ -106,7 +117,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 	} else {
 
-		pmtiles_server, err = pmtiles.NewServer(tile_path, "", opts.Logger, 64, "", "")
+		pmtiles_server, err = pmtiles.NewServer(tile_path, opts.PMTilesPrefix, opts.Logger, opts.PMTilesCacheSize, "", opts.PMTilesHostname)
 
 		if err != nil {
 			return fmt.Errorf("Failed to create PMTiles server, %w", err)
@@ -136,18 +147,18 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 	mux.Handle("/", tile_handler)
 
-	if enable_example {
+	if opts.EnableExample {
 
-		if example_database == "" {
+		if opts.ExampleDatabase == "" {
 			return fmt.Errorf("You must specify a value for -example-database.")
 		}
 
 		append_opts := &rewrite.AppendResourcesOptions{
 			DataAttributes: map[string]string{
-				"example-database":  example_database,
-				"example-latitude":  example_latitude,
-				"example-longitude": example_longitude,
-				"example-zoom":      example_zoom,
+				"example-database":  opts.ExampleDatabase,
+				"example-latitude":  strconv.FormatFloat(opts.ExampleLatitude, 'f', -1, 64),
+				"example-longitude": strconv.FormatFloat(opts.ExampleLongitude, 'f', -1, 64),
+				"example-zoom":      strconv.Itoa(opts.ExampleZoom),
 			},
 		}
 
@@ -163,7 +174,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	null_handler := http.NullHandler()
 	mux.Handle("/favicon.ico", null_handler)
 
-	s, err := server.NewServer(ctx, opts.HTTPServerURI)
+	s, err := server.NewServer(ctx, opts.ServerURI)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create new server, %w", err)

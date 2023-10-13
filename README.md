@@ -16,7 +16,11 @@ go build -mod vendor -o bin/server cmd/server/main.go
 ### server
 
 ```
-$> ./bin/server -h
+> ./bin/server -h
+Launch a web server for search Protomaps (v3) tile requests.
+Usage:
+	 ./bin/server [options]
+Valid options are:
   -cache-size int
     	Cache size in megabytes for tiles. (default 64)
   -cors-allow-credentials
@@ -31,16 +35,20 @@ $> ./bin/server -h
     	Enable an example map application at /example for testing database files. 
   -example-database string
     	The name of the database to use in the example map application. Note that this value should be the name of the database without its extension.
-  -example-latitude string
-    	The starting latitude for the example map application. (default "37.6143")
-  -example-longitude string
-    	The starting longitude for the example map application. (default "-122.3828")
-  -example-zoom string
-    	The starting zoom for the example map application. (default "13")
+  -example-latitude float
+    	The starting latitude for the example map application. (default 37.6143)
+  -example-longitude float
+    	The starting longitude for the example map application. (default -122.3828)
+  -example-zoom int
+    	The starting zoom for the example map application. (default 13)
+  -public-hostname string
+    	Public hostname of tile endpoint.
   -server-uri string
     	A valid aaronland/go-http-server URI. (default "http://localhost:8080")
   -tile-path string
     	A valid gocloud.dev/blob bucket URI where .pmtiles databases are stored.
+  -tile-prefix string
+    	A prefix to append when fetching tiles.
 ```
 
 For example:
