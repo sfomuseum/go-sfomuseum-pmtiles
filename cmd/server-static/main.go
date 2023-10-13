@@ -1,11 +1,9 @@
-// server launches a web server for search Protomaps (v3) tile requests.
+// server-static launches a web server for serving Protomaps (v3) tile requests using an embedded Protomaps database.
 package main
 
 import (
-	_ "github.com/aaronland/gocloud-blob-s3"
-	_ "gocloud.dev/blob/fileblob"
+	_ "gocloud.dev/blob/fileblob"	
 	_ "gocloud.dev/blob/memblob"
-	_ "gocloud.dev/blob/s3blob"
 )
 
 import (

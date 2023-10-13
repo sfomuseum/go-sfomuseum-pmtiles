@@ -35,11 +35,12 @@ type RunOptions struct {
 	ExampleLongitude float64
 	ExampleZoom      int
 
-	PMTilesURI       string
-	PMTilesFS        fs.FS
-	PMTilesPrefix    string
-	PMTilesCacheSize int
-	PMTilesHostname  string
+	PMTilesURI         string
+	PMTilesFS          fs.FS
+	PMTilesPrefix      string
+	PMTilesCacheSize   int
+	PMTilesHostname    string
+	PMTilesStripPrefix string
 }
 
 func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, error) {
@@ -56,10 +57,11 @@ func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, e
 		ServerURI: server_uri,
 		Logger:    logger,
 
-		PMTilesURI:       tile_path,
-		PMTilesPrefix:    tile_prefix,
-		PMTilesCacheSize: cache_size,
-		PMTilesHostname:  public_hostname,
+		PMTilesURI:         tile_path,
+		PMTilesPrefix:      tile_prefix,
+		PMTilesCacheSize:   cache_size,
+		PMTilesHostname:    public_hostname,
+		PMTilesStripPrefix: strip_prefix,
 
 		EnableCORS:           enable_cors,
 		CORSOrigins:          cors_origins,
@@ -143,6 +145,10 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		})
 
 		tile_handler = c.Handler(tile_handler)
+	}
+
+	if opts.PMTilesStripPrefix != "" {
+		tile_handler = gohttp.StripPrefix(opts.PMTilesStripPrefix, tile_handler)
 	}
 
 	mux.Handle("/", tile_handler)

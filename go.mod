@@ -6,9 +6,9 @@ require (
 	github.com/aaronland/go-http-rewrite v1.1.0
 	github.com/aaronland/go-http-server v1.3.0
 	github.com/aaronland/gocloud-blob-s3 v0.2.3
-	github.com/paulmach/orb v0.7.1
-	github.com/protomaps/go-pmtiles v1.10.0
-	github.com/rs/cors v1.10.0
+	github.com/paulmach/orb v0.10.0
+	github.com/protomaps/go-pmtiles v1.10.2
+	github.com/rs/cors v1.10.1
 	github.com/sfomuseum/go-flags v0.10.0
 	gocloud.dev v0.34.0
 )
@@ -57,6 +57,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/schollz/progressbar/v3 v3.11.0 // indirect
+	go.mongodb.org/mongo-driver v1.11.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/net v0.13.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect

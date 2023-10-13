@@ -21,6 +21,9 @@ var cache_size int
 // A prefix to append when fetching tiles.
 var tile_prefix string
 
+// An optional string prefix to strip from HTTP request for tiles.
+var strip_prefix string
+
 // Public hostname of tile endpoint
 var public_hostname string
 
@@ -74,6 +77,8 @@ func DefaultFlagSet() *flag.FlagSet {
 	fs.Float64Var(&example_latitude, "example-latitude", 37.6143, "The starting latitude for the example map application.")
 	fs.Float64Var(&example_longitude, "example-longitude", -122.3828, "The starting longitude for the example map application.")
 	fs.IntVar(&example_zoom, "example-zoom", 13, "The starting zoom for the example map application.")
+
+	fs.StringVar(&strip_prefix, "strip-prefix", "", "An optional string prefix to strip from HTTP request for tiles.")
 
 	fs.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Launch a web server for search Protomaps (v3) tile requests.\n")
