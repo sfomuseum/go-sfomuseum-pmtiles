@@ -14,6 +14,7 @@ import (
 	"github.com/protomaps/go-pmtiles/pmtiles"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
+	local "github.com/sfomuseum/go-sfomuseum-pmtiles"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
 )
@@ -67,7 +68,7 @@ func RunOptionsWithFlagSetAndFS(flag_fs *flag.FlagSet, logger *log.Logger, fs fs
 		return nil, err
 	}
 
-	server, err := pmtiles.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
+	server, err := local.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
 
 	if err != nil {
 		return nil, err
