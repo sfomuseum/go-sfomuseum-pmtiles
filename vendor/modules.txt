@@ -9,7 +9,7 @@ github.com/aaronland/go-aws-session
 # github.com/aaronland/go-http-rewrite v1.1.0
 ## explicit; go 1.18
 github.com/aaronland/go-http-rewrite
-# github.com/aaronland/go-http-server v1.2.0
+# github.com/aaronland/go-http-server v1.3.0
 ## explicit; go 1.18
 github.com/aaronland/go-http-server
 # github.com/aaronland/go-roster v1.0.0
@@ -24,7 +24,7 @@ github.com/aaronland/gocloud-blob-s3
 # github.com/akrylysov/algnhsa v1.0.0
 ## explicit; go 1.18
 github.com/akrylysov/algnhsa
-# github.com/aws/aws-lambda-go v1.37.0
+# github.com/aws/aws-lambda-go v1.41.0
 ## explicit; go 1.18
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
@@ -213,6 +213,9 @@ github.com/bits-and-blooms/bitset
 # github.com/dustin/go-humanize v1.0.0
 ## explicit
 github.com/dustin/go-humanize
+# github.com/gogo/protobuf v1.3.2
+## explicit; go 1.15
+github.com/gogo/protobuf/proto
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 ## explicit
 github.com/golang/groupcache/lru
@@ -255,6 +258,9 @@ github.com/mschoch/smat
 # github.com/paulmach/orb v0.7.1
 ## explicit; go 1.15
 github.com/paulmach/orb
+github.com/paulmach/orb/clip
+github.com/paulmach/orb/encoding/mvt
+github.com/paulmach/orb/encoding/mvt/vectortile
 github.com/paulmach/orb/geojson
 github.com/paulmach/orb/internal/length
 github.com/paulmach/orb/internal/mercator
@@ -262,6 +268,9 @@ github.com/paulmach/orb/maptile
 github.com/paulmach/orb/maptile/tilecover
 github.com/paulmach/orb/planar
 github.com/paulmach/orb/project
+# github.com/paulmach/protoscan v0.2.1
+## explicit; go 1.15
+github.com/paulmach/protoscan
 # github.com/protomaps/go-pmtiles v1.10.0
 ## explicit; go 1.18
 github.com/protomaps/go-pmtiles/pmtiles
@@ -304,6 +313,7 @@ gocloud.dev/aws
 gocloud.dev/blob
 gocloud.dev/blob/driver
 gocloud.dev/blob/fileblob
+gocloud.dev/blob/memblob
 gocloud.dev/blob/s3blob
 gocloud.dev/gcerrors
 gocloud.dev/internal/escape

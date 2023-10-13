@@ -4,8 +4,9 @@ go 1.21
 
 require (
 	github.com/aaronland/go-http-rewrite v1.1.0
-	github.com/aaronland/go-http-server v1.2.0
+	github.com/aaronland/go-http-server v1.3.0
 	github.com/aaronland/gocloud-blob-s3 v0.2.3
+	github.com/paulmach/orb v0.7.1
 	github.com/protomaps/go-pmtiles v1.10.0
 	github.com/rs/cors v1.10.0
 	github.com/sfomuseum/go-flags v0.10.0
@@ -18,7 +19,7 @@ require (
 	github.com/aaronland/go-roster v1.0.0 // indirect
 	github.com/aaronland/go-string v1.0.0 // indirect
 	github.com/akrylysov/algnhsa v1.0.0 // indirect
-	github.com/aws/aws-lambda-go v1.37.0 // indirect
+	github.com/aws/aws-lambda-go v1.41.0 // indirect
 	github.com/aws/aws-sdk-go v1.44.320 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.20.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.11 // indirect
@@ -41,6 +42,7 @@ require (
 	github.com/aws/smithy-go v1.14.0 // indirect
 	github.com/bits-and-blooms/bitset v1.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -51,7 +53,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
-	github.com/paulmach/orb v0.7.1 // indirect
+	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/schollz/progressbar/v3 v3.11.0 // indirect
