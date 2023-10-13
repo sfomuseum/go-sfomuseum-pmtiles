@@ -1,16 +1,16 @@
-package pmtiles
+package bucket
 
 import (
 	"context"
 	"fmt"
 	"io"
 
-	pm "github.com/protomaps/go-pmtiles/pmtiles"
+	"github.com/protomaps/go-pmtiles/pmtiles"
 	"gocloud.dev/blob"
 )
 
 type GoCloudBucket struct {
-	pm.Bucket
+	pmtiles.Bucket
 	bucket *blob.Bucket
 }
 

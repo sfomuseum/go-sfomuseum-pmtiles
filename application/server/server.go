@@ -14,20 +14,21 @@ import (
 	"github.com/protomaps/go-pmtiles/pmtiles"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
-	local "github.com/sfomuseum/go-sfomuseum-pmtiles"
+	"github.com/sfomuseum/go-sfomuseum-pmtiles/bucket"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/example"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/http"
 )
 
 type RunOptions struct {
-	Server               *pmtiles.Server
 	Logger               *log.Logger
+	FS                   fs.FS
 	EnableCORS           bool
 	CORSOrigins          []string
 	CORSAllowCredentials bool
 	CORSDebug            bool
 	HTTPServerURI        string
 
+	// To do: Add pmtiles.Server vars here
 	// To do: Add example_ vars here
 }
 
@@ -41,15 +42,8 @@ func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, e
 		return nil, fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	server, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create pmtiles.Server, %w", err)
-	}
-
 	opts := &RunOptions{
 		HTTPServerURI:        server_uri,
-		Server:               server,
 		Logger:               logger,
 		EnableCORS:           enable_cors,
 		CORSOrigins:          cors_origins,
@@ -57,24 +51,6 @@ func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, e
 		CORSDebug:            cors_debug,
 	}
 
-	return opts, nil
-}
-
-func RunOptionsWithFlagSetAndFS(flag_fs *flag.FlagSet, logger *log.Logger, fs fs.FS) (*RunOptions, error) {
-
-	opts, err := RunOptionsWithFlagSet(flag_fs, logger)
-
-	if err != nil {
-		return nil, err
-	}
-
-	server, err := local.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
-
-	if err != nil {
-		return nil, err
-	}
-
-	opts.Server = server
 	return opts, nil
 }
 
@@ -95,15 +71,8 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to assign flags from environment variables, %w", err)
 	}
 
-	server, err := pmtiles.NewServer(tile_path, "", logger, cache_size, "", "")
-
-	if err != nil {
-		return fmt.Errorf("Failed to create pmtiles.Loop, %w", err)
-	}
-
 	opts := &RunOptions{
 		HTTPServerURI:        server_uri,
-		Server:               server,
 		Logger:               logger,
 		EnableCORS:           enable_cors,
 		CORSOrigins:          cors_origins,
@@ -116,11 +85,39 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 
 func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
-	opts.Server.Start()
+	var pmtiles_server *pmtiles.Server
+	var err error
+
+	if opts.FS != nil {
+
+		fs_bucket, err := bucket.NewBucketWithFS(opts.FS, tile_path, "")
+
+		if err != nil {
+			return fmt.Errorf("Failed to create new bucket from filesystem, %w", err)
+		}
+
+		defer fs_bucket.Close()
+
+		pmtiles_server, err = pmtiles.NewServerWithBucket(fs_bucket, "", opts.Logger, 64, "", "")
+
+		if err != nil {
+			return fmt.Errorf("Failed to create PMTiles server from bucket, %w", err)
+		}
+
+	} else {
+
+		pmtiles_server, err = pmtiles.NewServer(tile_path, "", opts.Logger, 64, "", "")
+
+		if err != nil {
+			return fmt.Errorf("Failed to create PMTiles server, %w", err)
+		}
+	}
+
+	pmtiles_server.Start()
 
 	mux := gohttp.NewServeMux()
 
-	tile_handler := http.TileHandler(opts.Server, opts.Logger)
+	tile_handler := http.TileHandler(pmtiles_server, opts.Logger)
 
 	if opts.EnableCORS {
 

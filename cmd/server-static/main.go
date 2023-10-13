@@ -23,11 +23,13 @@ func main() {
 
 	flag_fs := app.DefaultFlagSet()
 
-	opts, err := app.RunOptionsWithFlagSetAndFS(flag_fs, logger, static.FS)
+	opts, err := app.RunOptionsWithFlagSet(flag_fs, logger)
 
 	if err != nil {
 		logger.Fatalf("Failed to derive run options from flagset, %w", err)
 	}
+
+	opts.FS = static.FS
 
 	err = app.RunWithOptions(ctx, opts)
 

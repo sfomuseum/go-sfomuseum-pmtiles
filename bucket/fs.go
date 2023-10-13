@@ -1,4 +1,4 @@
-package pmtiles
+package bucket
 
 import (
 	"context"
@@ -7,14 +7,14 @@ import (
 	"io/fs"
 	"log"
 
-	pm "github.com/protomaps/go-pmtiles/pmtiles"
+	"github.com/protomaps/go-pmtiles/pmtiles"
 )
 
-func NewServerWithFS(bucket_fs fs.FS, bucketURL string, prefix string, logger *log.Logger, cacheSize int, cors string, publicHostname string) (*pm.Server, error) {
+func NewBucketWithFS(bucket_fs fs.FS, bucketURL string, prefix string) (pmtiles.Bucket, error) {
 
 	ctx := context.Background()
 
-	bucketURL, _, err := pm.NormalizeBucketKey(bucketURL, prefix, "")
+	bucketURL, _, err := pmtiles.NormalizeBucketKey(bucketURL, prefix, "")
 
 	if err != nil {
 		return nil, err
@@ -25,6 +25,8 @@ func NewServerWithFS(bucket_fs fs.FS, bucketURL string, prefix string, logger *l
 	if err != nil {
 		return nil, fmt.Errorf("Failed to open bucket, %v", err)
 	}
+
+	log.Println("B", gc_bucket)
 
 	var walk_func func(path string, d fs.DirEntry, err error) error
 
@@ -69,6 +71,7 @@ func NewServerWithFS(bucket_fs fs.FS, bucketURL string, prefix string, logger *l
 			return fmt.Errorf("Failed to close %s, %w", path, err)
 		}
 
+		log.Println(path)
 		return nil
 	}
 
@@ -78,5 +81,5 @@ func NewServerWithFS(bucket_fs fs.FS, bucketURL string, prefix string, logger *l
 		return nil, fmt.Errorf("Failed to walk filesystem, %w", err)
 	}
 
-	return pm.NewServerWithBucket(gc_bucket, prefix, logger, cacheSize, cors, publicHostname)
+	return gc_bucket, nil
 }
