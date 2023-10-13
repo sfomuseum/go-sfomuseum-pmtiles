@@ -2,14 +2,18 @@
 package main
 
 import (
+	_ "github.com/aaronland/gocloud-blob-s3"
+	_ "gocloud.dev/blob/fileblob"
+	_ "gocloud.dev/blob/memblob"
+	_ "gocloud.dev/blob/s3blob"
+)
+
+import (
 	"context"
 	"log"
 
-	_ "github.com/aaronland/gocloud-blob-s3"
 	app "github.com/sfomuseum/go-sfomuseum-pmtiles/application/server"
 	"github.com/sfomuseum/go-sfomuseum-pmtiles/static"
-	_ "gocloud.dev/blob/fileblob"
-	_ "gocloud.dev/blob/s3blob"
 )
 
 func main() {

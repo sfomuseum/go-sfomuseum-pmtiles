@@ -26,24 +26,8 @@ type RunOptions struct {
 	CORSAllowCredentials bool
 	CORSDebug            bool
 	HTTPServerURI        string
-}
 
-func RunOptionsWithFlagSetAndFS(flag_fs *flag.FlagSet, logger *log.Logger, fs fs.FS) (*RunOptions, error) {
-
-	opts, err := RunOptionsWithFlagSet(flag_fs, logger)
-
-	if err != nil {
-		return nil, err
-	}
-
-	server, err := pmtiles.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
-
-	if err != nil {
-		return nil, err
-	}
-
-	opts.Server = server
-	return opts, nil
+	// To do: Add example_ vars here
 }
 
 func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, error) {
@@ -72,6 +56,24 @@ func RunOptionsWithFlagSet(fs *flag.FlagSet, logger *log.Logger) (*RunOptions, e
 		CORSDebug:            cors_debug,
 	}
 
+	return opts, nil
+}
+
+func RunOptionsWithFlagSetAndFS(flag_fs *flag.FlagSet, logger *log.Logger, fs fs.FS) (*RunOptions, error) {
+
+	opts, err := RunOptionsWithFlagSet(flag_fs, logger)
+
+	if err != nil {
+		return nil, err
+	}
+
+	server, err := pmtiles.NewServerWithFS(fs, tile_path, "", logger, cache_size, "", "")
+
+	if err != nil {
+		return nil, err
+	}
+
+	opts.Server = server
 	return opts, nil
 }
 
