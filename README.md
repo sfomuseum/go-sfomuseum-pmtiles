@@ -161,9 +161,7 @@ And this:
 	-example-database sfo
 ```
 
-Which tells the code to load a PMTiles database named "sfo.db" from an [embedded filesystem](https://pkg.go.dev/embed) defined in [static/static.go](static/static.go).
-
-The other relevant flag is:
+Which tells the code to load a PMTiles database named "sfo.db" from an [embedded filesystem](https://pkg.go.dev/embed) defined in [static/static.go](static/static.go). The other relevant flag is:
 
 ```
 	-tile-path mem://
@@ -175,7 +173,7 @@ If instead you wanted to copy the embedded filesystem to a local filesystem you 
 
 The point is not that you _should_ do it this way. The point is that there are circumstances where you might want or need to serve tiles from an embedded filesystem and now you can.
 
-By default the `erver-static` tool supports cloning embedded filesystems to memory or a local filesystem. If you want to copy filesystems to other [blob.Bucket](https://gocloud.dev/howto/blob/) implementations you will need to [clone the code](cmd/server-static/main.go) and add the relevent `import` statements.
+By default the `server-static` tool supports cloning embedded filesystems to memory or a local filesystem. If you want to copy filesystems to other [blob.Bucket](https://gocloud.dev/howto/blob/) implementations you will need to [clone the code](cmd/server-static/main.go) and add the relevent `import` statements.
 
 #### AWS
 
