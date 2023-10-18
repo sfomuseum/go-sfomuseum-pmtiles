@@ -10,7 +10,7 @@ Opinionated SFO Museum package for working with Protomaps (v3) databases.
 
 ```
 $> make cli
-go build -mod vendor -o bin/server cmd/server/main.go
+go build -ldflags="-s -w" -mod vendor -o bin/server cmd/server/main.go 
 ```
 
 ### server
@@ -53,6 +53,10 @@ Valid options are:
     	A prefix to append when fetching tiles.
 ```
 
+### Examples
+
+#### localhost
+
 For example:
 
 ```
@@ -75,6 +79,8 @@ $> ./bin/server \
 
 ![](docs/images/example-sfo.png)
 
+#### S3
+
 Or, with a PMTiles database hosted on S3:
 
 ```
@@ -86,6 +92,8 @@ $> bin/server \
 ```
 
 ![](docs/images/example-world.png)
+
+#### static/embedded
 
 It is also possible to use an PMTiles database embedded in an `fs.FS` instance. This is functionality specific to the `go-sfomuseum-pmtiles` package
 rather than `protomaps/go-pmtiles` itself. In order to use an embedded PMTiles database you need to explictly define a `fs.FS` instance where databases
@@ -135,6 +143,23 @@ go run -mod readonly cmd/server-static/main.go \
 		
 2023/10/13 16:25:33 Listening for requests on http://localhost:8080
 ```
+
+_Screenhost omitted because it looks the same as the screenshot for local hosting._
+
+The relevant bits here are this:
+
+```
+	opts, _ := app.RunOptionsWithFlagSet(flag_fs, logger)
+	opts.PMTilesFS = static.FS
+```
+
+And this:
+
+```
+	-example-database sfo
+```
+
+Which tells the code to load a PMTiles database named "sfo.db" from an [embedded filesystem](https://pkg.go.dev/embed) defined in [static/static.go](static/static.go).
 
 #### AWS
 
