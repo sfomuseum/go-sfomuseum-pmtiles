@@ -8,7 +8,7 @@ import (
 	_ "github.com/aaronland/gocloud-blob-s3"
 	app "github.com/sfomuseum/go-sfomuseum-pmtiles/application/server"
 	_ "gocloud.dev/blob/fileblob"
-	_ "gocloud.dev/blob/s3blob"	
+	_ "gocloud.dev/blob/s3blob"
 )
 
 func main() {
