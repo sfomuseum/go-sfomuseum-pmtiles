@@ -167,7 +167,7 @@ Which tells the code to load a PMTiles database named "sfo.db" from an [embedded
 	-tile-path mem://
 ```
 
-Which tells the code to copy the files in the embedded filesystem to a new [in-memory `gocloud.dev/blob.Bucket` instance](https://gocloud.dev/howto/blob/). Technically it copies the data to a locally-defined `GoCloudBucket` instance that wraps the `blob.Bucket` instance and implements the `protomaps/go-pmtiles/pmtiles.Bucket` interface. Computers, amirite?
+Which tells the code to copy the files in the embedded filesystem to a new [in-memory `gocloud.dev/blob.Bucket` instance](https://gocloud.dev/howto/blob/). Technically it copies the data to a locally-defined [`GoCloudBucket`](bucket/gocloud.go) instance that wraps the `blob.Bucket` instance and implements the `protomaps/go-pmtiles/pmtiles.Bucket` interface. Computers, amirite?
 
 If instead you wanted to copy the embedded filesystem to a local filesystem you would update the `-tile-path` parameter to specify the relevant "file:///path/to/folder" URI. This might seem counter-intuitive but if used in a frequently-invoked AWS Lambda function context you could take advantage of the fact the function (and its filesystem) will persist across invocations and bundle a PMTiles database that might otherwise be too large to bundle in memory without the need to setup and configure an S3 bucket to store the database(s) you are serving.
 
