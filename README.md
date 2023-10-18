@@ -95,7 +95,7 @@ $> bin/server \
 
 #### static/embedded
 
-It is also possible to use an PMTiles database embedded in an `fs.FS` instance. This is functionality specific to the `go-sfomuseum-pmtiles` package
+It is also possible to use a PMTiles database embedded in an `fs.FS` instance. This is functionality specific to the `go-sfomuseum-pmtiles` package
 rather than `protomaps/go-pmtiles` itself.
 
 In order to use an embedded PMTiles database you need to explictly define a `fs.FS` instance where databases are stored. The contents of the `fs.FS` filesystem are copied to a `gocloud.dev/blob.Bucket` at runtime which is then used to initialize a `go-pmtiles.Bucket` instance for serving tiles.
