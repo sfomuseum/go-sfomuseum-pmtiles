@@ -96,9 +96,11 @@ $> bin/server \
 #### static/embedded
 
 It is also possible to use an PMTiles database embedded in an `fs.FS` instance. This is functionality specific to the `go-sfomuseum-pmtiles` package
-rather than `protomaps/go-pmtiles` itself. In order to use an embedded PMTiles database you need to explictly define a `fs.FS` instance where databases
-are stored. The contents of the `fs.FS` filesystem are copied to a `gocloud.dev/blob.Bucket` at runtime which is then used to initialize a `go-pmtiles.Bucket`
-instance for serving tiles. For example:
+rather than `protomaps/go-pmtiles` itself.
+
+In order to use an embedded PMTiles database you need to explictly define a `fs.FS` instance where databases are stored. The contents of the `fs.FS` filesystem are copied to a `gocloud.dev/blob.Bucket` at runtime which is then used to initialize a `go-pmtiles.Bucket` instance for serving tiles.
+
+For example:
 
 ```
 package main
@@ -160,6 +162,20 @@ And this:
 ```
 
 Which tells the code to load a PMTiles database named "sfo.db" from an [embedded filesystem](https://pkg.go.dev/embed) defined in [static/static.go](static/static.go).
+
+The other relevant flag is:
+
+```
+	-tile-path mem://
+```
+
+Which tells the code to copy the files in the embedded filesystem to a new [in-memory `gocloud.dev/blob.Bucket` instance](https://gocloud.dev/howto/blob/). Technically it copies the data to a locally-defined `GoCloudBucket` instance that wraps the `blob.Bucket` instance and implements the `protomaps/go-pmtiles/pmtiles.Bucket` interface. Computers, amirite?
+
+If instead you wanted to copy the embedded filesystem to a local filesystem you would update the `-tile-path` parameter to specify the relevant "file:///path/to/folder" URI. This might seem counter-intuitive but if used in a frequently-invoked AWS Lambda function context you could take advantage of the fact the function (and its filesystem) will persist across invocations and bundle a PMTiles database that might otherwise be too large to bundle in memory without the need to setup and configure an S3 bucket to store the database(s) you are serving.
+
+The point is not that you _should_ do it this way. The point is that there are circumstances where you might want or need to serve tiles from an embedded filesystem and now you can.
+
+By default the `erver-static` tool supports cloning embedded filesystems to memory or a local filesystem. If you want to copy filesystems to other [blob.Bucket](https://gocloud.dev/howto/blob/) implementations you will need to [clone the code](cmd/server-static/main.go) and add the relevent `import` statements.
 
 #### AWS
 
