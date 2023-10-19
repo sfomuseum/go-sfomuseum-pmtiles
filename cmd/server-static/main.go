@@ -2,7 +2,7 @@
 package main
 
 import (
-	_ "gocloud.dev/blob/fileblob"	
+	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
 )
 
