@@ -15,6 +15,7 @@ debug-static:
 		-tile-path mem://
 
 cli:
+	go build -ldflags="-s -w" -mod $(GOMOD) -o bin/pmtiles cmd/pmtiles/main.go 
 	go build -ldflags="-s -w" -mod $(GOMOD) -o bin/server cmd/server/main.go 
 
 lambda:
