@@ -24,7 +24,7 @@ func main() {
 	opts, err := app.RunOptionsWithFlagSet(flag_fs, logger)
 
 	if err != nil {
-		logger.Fatalf("Failed to derive run options from flagset, %w", err)
+		logger.Fatalf("Failed to derive run options from flagset, %v", err)
 	}
 
 	opts.PMTilesFS = static.FS
@@ -32,6 +32,6 @@ func main() {
 	err = app.RunWithOptions(ctx, opts)
 
 	if err != nil {
-		logger.Fatal("Failed to run server, %w", err)
+		logger.Fatalf("Failed to run server, %v", err)
 	}
 }
