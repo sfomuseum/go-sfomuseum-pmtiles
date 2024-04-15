@@ -16,6 +16,8 @@ window.addEventListener('load', function(e){
     const map = L.map("map");
     map.setView([lat, lon], zoom);
 
-    var layer = protomaps.leafletLayer({url: db_url});
+    var theme = 'light';
+    var layer = protomapsL.leafletLayer({url: db_url, theme: theme});
+    
     layer.addTo(map);
 });
